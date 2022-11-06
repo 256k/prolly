@@ -19,7 +19,7 @@ function Sequencer:new(note, length, prob)
     s.cutoff = 20
     s.release = 1
     s.play = true
-    s.tempoDiv = 1
+    s.tempoDiv = 4
 
     return s
 end
@@ -55,6 +55,15 @@ function Sequencer:trigger()
         -- print("skip")
     end
     self:inc_step()
+end
+
+function Sequencer:run()
+  clock.run(function()
+    while true do
+      clock.sleep(1/self.tempoDiv)
+      self:trigger()
+    end
+  end)
 end
 
 function Sequencer:inc_step()
