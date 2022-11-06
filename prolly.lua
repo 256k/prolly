@@ -10,21 +10,23 @@ SEQUENCER_LENGTH = 16
 local Sequencer = include('lib/Sequencer')
 
 notes_num = MusicUtil.generate_scale(57,"dorian")
-notes_freq = MusicUtil.note_nums_to_freqs(notes_num)
+-- notes_freq = MusicUtil.note_nums_to_freqs(notes_num)
 
 
 local seq_count = 8
 local seqs = {}
 
-for i=1,seq_count do
-seqs[i] = Sequencer:new(notes_freq[i], 16, 0)
-end
 
 local menu_page = 1
 
 engine.name = "PolyPerc"
 
 function init()
+  for i=1,seq_count do
+    -- sequencer(note, length, probability)
+seqs[i] = Sequencer:new(notes_num[i], 16, 0)
+end
+
   engine.release(0.33)
   engine.cutoff(600)
   for i=1,#seqs do
@@ -47,11 +49,20 @@ end
 hs.init()
 
 function redraw()
+  local y_space = 8
 screen.clear()
-screen.move(10,10)
-screen.text("sequencer "..menu_page.." Length: ".. seqs[menu_page].length)
-screen.move(10,20)
-screen.text("sequencer "..menu_page.." probability: ".. seqs[menu_page].prob)
+screen.move(4,y_space*1)
+screen.text("Length: ".. seqs[menu_page].length)
+screen.move(4,y_space*2)
+screen.text("probability: ".. seqs[menu_page].prob)
+screen.move(4,y_space*3)
+local note_name = MusicUtil.note_num_to_name(seqs[menu_page].note) 
+-- print(note_name)
+screen.text("note: "..note_name )
+screen.move(90, 10)
+screen.font_size(16)
+screen.text("[ "..menu_page.." ]")
+screen.font_size(8)
 screen.update()  
 end
 
@@ -73,24 +84,3 @@ function enc(n,d)
   if n==3 then seqs[menu_page].prob = util.clamp(seqs[menu_page].prob + d, 0, 100)  end
 end
 
--- function a_trigger()
---   -- notes_freq = 
---   -- ta.print(notes())
---   if a_seq[a_step] < a_prob then engine.hz(notes_freq[math.random(1,8)]) else print("skip") end
---     if a_step + 1 <= a_length then a_step = a_step + 1 else a_step = 1 end
--- end
-
--- function b_trigger()
---   -- notes_freq = 
---   -- ta.print(notes())
---   if b_seq[b_step] < b_prob then engine.hz(notes_freq[math.random(1,8)]) else print("skip") end
---     if b_step + 1 <= b_length then b_step = b_step + 1 else b_step = 1 end
--- end
-
-
--- function randomize_seq(seq)
--- for i=1,#seq do
--- seq[i] = math.random(1, 100);
--- end
-
--- end

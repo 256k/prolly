@@ -36,7 +36,7 @@ function Sequencer:randomize()
     for i = 1, #self.seq do
         self.seq[i] = math.random(1, 100);
     end
-    tab.print(self.seq)
+    -- tab.print(self.seq)
 end
 
 function Sequencer:play()
@@ -50,7 +50,8 @@ end
 function Sequencer:trigger()
     -- checks probability for bang or no bang
     if self.seq[self.step] < self.prob then
-        engine.hz(self.note)
+        local notefreq = MusicUtil.note_num_to_freq(self.note)
+        engine.hz(notefreq)
     else
         -- print("skip")
     end
