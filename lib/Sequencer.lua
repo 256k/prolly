@@ -47,6 +47,21 @@ function Sequencer:stop()
     self.play = false
 end
 
+function Sequencer:draw_map()
+local startx = 10
+local starty = 40
+local blockw = 4
+local blockh = 4
+screen.move(startx, starty)
+for i=1,SEQUENCER_LENGTH do
+    screen.level(15)
+    screen.move_rel()
+screen.rect(blockw, blockw)
+screen.stroke()
+screen.move_rel(blockw, starty)
+end
+end
+
 function Sequencer:trigger()
     -- checks probability for bang or no bang
     if self.seq[self.step] < self.prob then

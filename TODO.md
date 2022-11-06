@@ -10,3 +10,4 @@
 - grid integration
 - change UI to have a more visual representation of the sequence, it's playhead and the probability of each step represented in opacity/brightness 
 - have a global page that shows all the sequences together on horizontal lines with playheads and probability
+- add ability for each track to step through multiple notes on each consecutive loop
