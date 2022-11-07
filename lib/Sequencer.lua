@@ -1,26 +1,39 @@
 Sequencer = {}
 
-function Sequencer:new(note, length, prob)
+function Sequencer:new(id, noteArray, length, prob, cutoff)
   print("new Sequencer created")
+  tab.print(noteArray)
     local s = setmetatable({}, {
         __index = Sequencer
     })
-    -- s.generation = (g or counters.music_generation)
-    -- s.x = x
-    -- s.y = y
-    -- s.id = "Sequencer-" .. fn.id() -- unique identifier for this Sequencer
-    -- s.index = fn.index(x, y) -- location on the grid
-    -- s.heading = h
+    s.id = id
     s.seq = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    s.note = note
+    s.noteArray = noteArray
+    s.noteIndex = 1
+    s.note = s.noteArray[s.noteIndex]
     s.length = length
     s.prob = prob
     s.step = 1
-    s.cutoff = 20
+    s.cutoff = cutoff
     s.release = 1
     s.play = true
     s.tempoDiv = 4
 
+    -- params:
+    
+    params:add_group("Track "..id,3)
+    s_cutoff = controlspec.new(50,5000,'exp',0,800,'hz')
+  params:add{type="control",id="cutoff"..id,controlspec=s_cutoff,
+    action=function(x) s.cutoff=x print(x) end}
+    s_release = controlspec.new(0.05,3,'lin',0,0.5,'s')
+  params:add{type="control",id="release"..id,controlspec=s_release,
+    action=function(x) s.release=x print(x) end}
+    s_note = controlspec.new(1,8,'lin',1,1)
+  params:add{type="control",id="note"..id,controlspec=s_note,
+    action=function(x) s.note=s.noteArray[x] print(x) end}
+--   params:add{type="control",id="cutoff",controlspec=cs_CUT,
+--   action=function(x) engine.cutoff(x) end}
+-- print(s.noteArray[s.noteIndex])
     return s
 end
 
@@ -65,12 +78,20 @@ end
 function Sequencer:trigger()
     -- checks probability for bang or no bang
     if self.seq[self.step] < self.prob then
+        -- print("test" .. self.noteArray[self.noteIndex])
         local notefreq = MusicUtil.note_num_to_freq(self.note)
+        self:setEngine()
+        print(notefreq)
         engine.hz(notefreq)
     else
         -- print("skip")
     end
     self:inc_step()
+end
+function Sequencer:setEngine()
+    print("set engine")
+    engine.cutoff(self.cutoff)
+    engine.release(self.release)
 end
 
 function Sequencer:run()

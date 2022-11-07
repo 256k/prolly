@@ -22,9 +22,10 @@ local menu_page = 1
 engine.name = "PolyPerc"
 
 function init()
+  params:add_separator("tracks")
   for i=1,seq_count do
-    -- sequencer(note, length, probability)
-seqs[i] = Sequencer:new(notes_num[i], 16, 0)
+    -- sequencer(id, notearray, length, probability)
+seqs[i] = Sequencer:new(i,notes_num, 16, 0, 800)
 end
 
   engine.release(0.33)
