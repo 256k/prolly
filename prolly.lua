@@ -10,6 +10,8 @@ SEQUENCER_LENGTH = 16
 local Sequencer = include('lib/Sequencer')
 
 notes_num = MusicUtil.generate_scale(57,"dorian")
+
+
 -- notes_freq = MusicUtil.note_nums_to_freqs(notes_num)
 
 
@@ -21,7 +23,29 @@ local menu_page = 1
 
 engine.name = "PolyPerc"
 
+local SCALE_NAMES = {}
+
+for i=1,#MusicUtil.SCALES do
+  SCALE_NAMES[i] = MusicUtil.SCALES[i].name
+end
+
+tab.print(SCALE_NAMES)
+
 function init()
+
+
+  params:add{
+    type= "option",
+    id = "scale_selection",
+    name = "Scale",
+    options=SCALE_NAMES,
+    action = function(x) 
+      notes_num = MusicUtil.generate_scale(57,x)
+      end
+  }
+
+
+
   params:add_separator("tracks")
   for i=1,seq_count do
     -- sequencer(id, notearray, length, probability)

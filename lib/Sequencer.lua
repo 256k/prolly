@@ -22,18 +22,50 @@ function Sequencer:new(id, noteArray, length, prob, cutoff)
     -- params:
     
     params:add_group("Track "..id,4)
-    s_cutoff = controlspec.new(50,5000,'exp',0,800,'hz')
-  params:add{type="control",id="cutoff"..id,controlspec=s_cutoff,
-    action=function(x) s.cutoff=x print(x) end}
+    -------------------------------
+    
+    -- ControlSpec.new (min, max, warp, step, default, units, quantum, wrap)
+    
+  params:add{
+    type= "control",
+    id = "cutoff"..id,
+    name = "Cutoff",
+    controlspec = controlspec.new(50,5000,'exp',0,800,'hz'),
+    action = function(x) 
+      s.cutoff = x 
+      
+      end
+  }
+  params:add{
+    type= "option",
+    id = "timeDiv"..id,
+    name = "Time div",
+    options={1,2,3,4,6,8,16,32},
+    action = function(x) 
+      s.timeDiv = x 
+      
+      end
+  }
+  params:add{
+    type= "option",
+    id = "note"..id,
+    name = "Note",
+    options=s.noteArray,
+    action = function(x) 
+      s.noteIndex = x 
+      end
+  }
+  -- tab.print(musicutil.SCALES)
+  
     s_release = controlspec.new(0.05,3,'lin',0,0.5,'s')
   params:add{type="control",id="release"..id,controlspec=s_release,
     action=function(x) s.release=x print(x) end}
-    s_note = controlspec.new(1,8,'lin',1,1)
-  params:add{type="control",id="note"..id,controlspec=s_note,
-    action=function(x) s.note=s.noteArray[x] print(x) end}
-    s_div = controlspec.new(1,8,'lin',1,1)
-  params:add{type="control",id="division"..id,name="time div",controlspec=s_div,
-  action=function(x) s.tempoDiv = 2^x end}
+  --   s_note = controlspec.new(1,8,'lin',1,1)
+  -- params:add{type="control",id="note"..id,controlspec=s_note,
+  --   action=function(x) s.note=s.noteArray[x] print(x) end}
+  --   s_div = controlspec.new(1,8,'lin',1,1)
+  -- params:add{type="control",id="division"..id,name="time div",controlspec=s_div,
+  -- action=function(x) s.tempoDiv = 2^x end}
 -- print(s.noteArray[s.noteIndex])
     return s
 end
