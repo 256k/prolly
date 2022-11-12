@@ -9,19 +9,19 @@ function Sequencer:new(id, noteArray, length, prob, cutoff)
     s.id = id
     s.seq = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     s.noteArray = noteArray
-    s.noteIndex = 1
+    s.noteIndex = id
     s.note = s.noteArray[s.noteIndex]
     s.length = length
     s.prob = prob
     s.step = 1
     s.cutoff = cutoff
-    s.release = 1
+    s.release = 0.3
     s.play = true
     s.tempoDiv = 4
 
     -- params:
     
-    params:add_group("Track "..id,3)
+    params:add_group("Track "..id,4)
     s_cutoff = controlspec.new(50,5000,'exp',0,800,'hz')
   params:add{type="control",id="cutoff"..id,controlspec=s_cutoff,
     action=function(x) s.cutoff=x print(x) end}
@@ -31,8 +31,9 @@ function Sequencer:new(id, noteArray, length, prob, cutoff)
     s_note = controlspec.new(1,8,'lin',1,1)
   params:add{type="control",id="note"..id,controlspec=s_note,
     action=function(x) s.note=s.noteArray[x] print(x) end}
---   params:add{type="control",id="cutoff",controlspec=cs_CUT,
---   action=function(x) engine.cutoff(x) end}
+    s_div = controlspec.new(1,8,'lin',1,1)
+  params:add{type="control",id="division"..id,name="time div",controlspec=s_div,
+  action=function(x) s.tempoDiv = 2^x end}
 -- print(s.noteArray[s.noteIndex])
     return s
 end
@@ -76,6 +77,7 @@ end
 end
 
 function Sequencer:trigger()
+  print("trigger", self.id)
     -- checks probability for bang or no bang
     if self.seq[self.step] < self.prob then
         -- print("test" .. self.noteArray[self.noteIndex])
@@ -97,7 +99,7 @@ end
 function Sequencer:run()
   clock.run(function()
     while true do
-      clock.sleep(1/self.tempoDiv)
+      clock.sync(1/self.tempoDiv)
       self:trigger()
     end
   end)
