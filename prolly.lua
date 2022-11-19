@@ -65,7 +65,7 @@ end
   clock.run(function()  -- redraw the screen 
     while true do
       clock.sleep(1/10)
-      redraw()
+      -- redraw()
     end
   end)
   
@@ -88,8 +88,8 @@ screen.move(90, 10)
 screen.font_size(16)
 screen.text("[ "..menu_page.." ]")
 screen.font_size(8)
+seqs[menu_page]:draw_track()
 
--- seqs[menu_page].draw_map()
 screen.update()  
 end
 
@@ -100,7 +100,7 @@ if k==1 and z== 1 then
   screen.move(35,28)
   screen.text("REGEN")
   screen.update()
-  -- redraw()
+  redraw()
   end
 end
 
@@ -109,5 +109,15 @@ function enc(n,d)
   if n==1 then menu_page = util.clamp(menu_page + d, 1,seq_count) end
   if n==2 then seqs[menu_page].length = util.clamp(seqs[menu_page].length + d, 1, 16)  end
   if n==3 then seqs[menu_page].prob = util.clamp(seqs[menu_page].prob + d, 0, 100)  end
+  redraw()
 end
 
+function map(OldValue, OldMin, OldMax, NewMin, NewMax)
+  OldRange = (OldMax - OldMin)  
+  NewRange = (NewMax - NewMin)  
+  NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+  return math.floor(NewValue)
+end
+
+
+-- norns.script.load("code/prolly/prolly.lua")
