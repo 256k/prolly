@@ -130,8 +130,12 @@ function Sequencer:trigger()
   if self.seq[self.step] < self.prob then
     -- print("test" .. self.noteArray[self.noteIndex])
     local notefreq = MusicUtil.note_num_to_freq(self.note)
-    self:setEngine()
-    engine.hz(notefreq)
+    -- self:setEngine()
+    -- engine.hz(notefreq)
+    local player = params:lookup_param("voice"):get_player()
+player:note_off(self.note)
+        player:note_on(self.note, 1)
+        
   else
     -- skip step
   end

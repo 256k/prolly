@@ -2,6 +2,7 @@
 -- a port of the euro module
 -- by 256k
 hs = include('lib/halfsecond')
+local nb = require "nb/lib/nb"
 MusicUtil = require("musicutil")
 sequins = require 'sequins'
 SEQUENCER_LENGTH = 16
@@ -33,7 +34,9 @@ tab.print(SCALE_NAMES)
 
 function init()
 
-
+nb:init()
+    nb:add_param("voice", "voice")
+    nb:add_player_params()
   params:add{
     type= "option",
     id = "scale_selection",
