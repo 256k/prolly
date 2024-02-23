@@ -161,11 +161,11 @@ function Sequencer:draw_track_linear()
     end
     
     -- this is the probability line
-    
     screen.blend_mode(0)
     local probMapped = map(self.prob,0, 100, 0, 20)
     print("probability:" .. probMapped)
-    screen.rect(xMargin, starty + probMapped, 108, 1)
+    screen.rect(xMargin, starty + probMapped - 1, 108, 1)
+    -------------------------------
 end
 
 function Sequencer:trigger()
