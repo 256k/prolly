@@ -33,7 +33,6 @@ end
 tab.print(SCALE_NAMES)
 
 function init()
-
 nb:init()
     nb:add_param("voice", "voice")
     nb:add_player_params()
@@ -91,7 +90,7 @@ screen.move(90, 10)
 screen.font_size(16)
 screen.text("[ "..menu_page.." ]")
 screen.font_size(8)
-seqs[menu_page]:draw_track()
+seqs[menu_page]:draw_track_linear()
 
 screen.update()  
 end

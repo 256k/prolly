@@ -93,34 +93,79 @@ function Sequencer:stop()
   self.play = false
 end
 
-function Sequencer:draw_track()
-  -- print("DRAW TRACK")
+-- function Sequencer:draw_track()
+--   print("DRAW TRACK")
+--   -- tab.print(self)
+--   -- if self then
+--     -- tab.print(self)
+--     local startx = 10
+--     local starty = 40
+--     local blockw = 8
+--     local blockh = 8
+--     local offset = 15
+--     step = 1
+--     for i = 1, SEQUENCER_LENGTH do
+--       if i == SEQUENCER_LENGTH/2 + 1 then
+--         step = 1
+--         starty = starty + startx + 2
+--       end
+--       stepLevel = map(self.seq[i], 0, 100, 15, 1)
+--       screen.level(stepLevel)
+--       screen.rect( offset + startx*step, starty, blockw, blockw)
+--       if i > self.length then screen.level(0) end
+--       screen.fill()
+--       if i == self.step then screen.level(15) else screen.level(0) end
+--       if i > self.length then screen.level(0) end
+--       screen.rect(offset + startx*step, starty, blockw, blockw)
+--       screen.stroke()
+--       screen.level(15)
+--       step = step + 1
+--     end
+-- end
+
+function Sequencer:draw_track_linear()
+  -- print("DRAW TRACK Linear")
   -- tab.print(self)
   -- if self then
     -- tab.print(self)
-    local startx = 10
+    local startx = 6
     local starty = 40
-    local blockw = 8
+    local blockw = 4
     local blockh = 8
-    local offset = 15
+    local offset = 4
+    local xMargin = 10
     step = 1
+    screen.blend_mode(1)
     for i = 1, SEQUENCER_LENGTH do
-      if i == SEQUENCER_LENGTH/2 + 1 then
-        step = 1
-        starty = starty + startx + 2
-      end
-      stepLevel = map(self.seq[i], 0, 100, 15, 1)
-      screen.level(stepLevel)
-      screen.rect( offset + startx*step, starty, blockw, blockw)
-      if i > self.length then screen.level(0) end
+      -- if i == SEQUENCER_LENGTH/2 + 1 then
+      --   step = 1
+      --   starty = starty + startx + 2
+      -- end
+      stepLevel = map(self.seq[i], 0, 100, 20 , 1)
+      screen.level(15)
+      
+      -- this is the step value block 
+      screen.rect(xMargin + offset + startx*step, starty + 20, blockw, -stepLevel)
+      -- if i > self.length then screen.level(0) end
       screen.fill()
+      
       if i == self.step then screen.level(15) else screen.level(0) end
       if i > self.length then screen.level(0) end
-      screen.rect(offset + startx*step, starty, blockw, blockw)
+      
+      
+      -- this is the step indicator stoke
+      screen.rect(xMargin + offset + startx*step, starty + 20, blockw, -stepLevel)
       screen.stroke()
       screen.level(15)
       step = step + 1
     end
+    
+    -- this is the probability line
+    
+    screen.blend_mode(0)
+    local probMapped = map(self.prob,0, 100, 0, 20)
+    print("probability:" .. probMapped)
+    screen.rect(xMargin, starty + probMapped, 108, 1)
 end
 
 function Sequencer:trigger()
@@ -130,17 +175,17 @@ function Sequencer:trigger()
   if self.seq[self.step] < self.prob then
     -- print("test" .. self.noteArray[self.noteIndex])
     local notefreq = MusicUtil.note_num_to_freq(self.note)
-    -- self:setEngine()
-    -- engine.hz(notefreq)
-    local player = params:lookup_param("voice"):get_player()
-player:note_off(self.note)
-        player:note_on(self.note, 1)
+    self:setEngine()
+    engine.hz(notefreq)
+    -- local player = params:lookup_param("voice"):get_player()
+    -- player:note_off(self.note)
+    -- player:note_on(self.note, 1)
         
   else
     -- skip step
   end
   
-  self:draw_track()
+  -- self:draw_track()
 end
 
 function Sequencer:setEngine()
