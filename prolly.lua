@@ -10,17 +10,17 @@ SEQUENCER_LENGTH = 16
 -- import local sequencer object
 local Sequencer = include('lib/Sequencer')
 
-notes_num = MusicUtil.generate_scale(57,"dorian")
+notes_num = MusicUtil.generate_scale(1,"dorian")
 
 
 -- notes_freq = MusicUtil.note_nums_to_freqs(notes_num)
 
 
-local seq_count = 8
+local seq_count = 16
 local seqs = {}
 
 
-local menu_page = 1
+menu_page = 1
 
 engine.name = "PolyPerc"
 
@@ -60,9 +60,7 @@ end
   seqs[i]:randomize()
   seqs[i]:run()
   end
-  -- Seq_A:randomize()
-  -- Seq_B:randomize()
-  -- Seq_C:randomize()
+
 
   clock.run(function()  -- redraw the screen 
     while true do
@@ -83,7 +81,7 @@ screen.text("Length: ".. seqs[menu_page].length)
 screen.move(4,y_space*2)
 screen.text("probability: ".. seqs[menu_page].prob)
 screen.move(4,y_space*3)
-local note_name = MusicUtil.note_num_to_name(seqs[menu_page].note) 
+local note_name = MusicUtil.note_num_to_name(seqs[menu_page].note + seqs[menu_page].oct, true) 
 -- print(note_name)
 screen.text("note: "..note_name )
 screen.move(90, 10)
